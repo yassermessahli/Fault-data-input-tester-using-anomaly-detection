@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+
 import pickle
 import pandas as pd
 import numpy as np
+
 
 app = FastAPI()
 
@@ -26,9 +28,11 @@ with open("normalizer.pkl", "rb") as g:
 
 @app.post('/')
 async def scoring_endpoint(item: ScoringItem):
-    x = np.array([item.Sex, item.Marital_status, np.log(item.Age) + 1, item.Education,
-                 np.log(item.Income) + 1, item.Occupation, item.Settlement_size])
+    x = np.array([item.Sex, item.Marital_status, np.log(item.Age + 1), item.Education,
+                 np.log(item.Income+1), item.Occupation, item.Settlement_size])
+    
     x = normalizer.transform([x])
 
     p = model.pdf(x) / 65444665.36036717  # max proba
-    return {"proba": p}
+    p = round(min(p*10, 0.99), 5) #after regulariation (for more readabiliy)
+    return {"probability": p}
