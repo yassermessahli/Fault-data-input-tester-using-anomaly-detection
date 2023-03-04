@@ -11,7 +11,7 @@ idna==3.4
 joblib==1.2.0
 lightgbm==3.3.5
 mypy-extensions==1.0.0
-numpy==1.24.2
+# numpy==1.24.2
 packaging==23.0
 pandas==1.5.3
 pathspec==0.11.0
